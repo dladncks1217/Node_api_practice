@@ -1,4 +1,5 @@
 const express = require('express');
+const { v4: uuidv4 } = require('uuid'); uuidv4();
 const router = express.Router();
 const {User,Domain} = require('../models');
 
@@ -20,5 +21,20 @@ router.get('/',(req,res,next)=>{
     })
 });
 
+router.post('/domain',(req,res,next)=>{
+    Domain.create({
+        userId: req.user.id,
+        host: req.body.host,
+        type: req.body.type,
+        clientSecret: uuidv4(), // 서버 요청 시 검사
+    })
+    .then(()=>{
+        res.redirect('/');
+    })
+    .catch((error)=>{
+        console.error(error);
+        next(error);
+    })
+});
 
 module.exports = router;
