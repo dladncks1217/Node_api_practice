@@ -41,8 +41,9 @@ db.User.belongsToMany(db.Post,{through:'Like'});
 db.Post.belongsToMany(db.User,{through:'Like', as:'Liker'});
 //좋아요 누르기 기능
 
-db.User.hasMany(db.Domain); // 한 사람이 여러 개의 키를 발급받을 수도 있기 때문, 1대다 관계
-db.Domain.belongsTo(db.User); 
+// 한 사람이 여러 개의 키를 발급받을 수도 있기 때문, 1대다 관계
+db.User.hasMany(db.Domain);
+db.Domain.belongsTo(db.User);
 
 
 

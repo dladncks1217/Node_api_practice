@@ -2,6 +2,7 @@ const express = require('express');
 const cookieparser = require('cookie-parser');
 const morgan = require('morgan');
 const path = require('path');
+const nunjucks = require('nunjucks');
 const session = require('express-session');
 const passport = require('passport');
 const localpassport = require('passport-local');
@@ -24,9 +25,12 @@ const app = express();
 sequelize.sync();
 
 
-app.set('view engine', 'ejs');
-app.set('views',path.join(__dirname,'views'));
-app.set('port',process.env.PORT||8001);
+app.set('port', process.env.PORT || 8002);
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+  express: app,
+  watch: true,
+});
 
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

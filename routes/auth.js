@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');//암호화모듈
+const bcrypt = require('bcryptjs');// bcrypt쓰고싶어여..
 const passport = require('passport');
 const {isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { User } = require('../models');
@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/join',isNotLoggedIn, async (req,res,next)=>{ //promise async
     const {email,nick,password} = req.body;
     try{
-        const exUser = await User.find({ where: { email } });   //비동기로 처리될 부분에 await
+        const exUser = await User.findOne({ where: { email } });   //비동기로 처리될 부분에 await
         if(exUser){
             req.flash('joinError','이미 가입된 이메일입니다.');
             return res.redirect('/join');

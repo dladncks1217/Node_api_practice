@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "l9324972im",
-    "database": "nodeapis",
+    "database": "node_api",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false

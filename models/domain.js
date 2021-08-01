@@ -1,6 +1,6 @@
-module.exports = (sequelize, DataTypes) =>{
+module.exports = (sequelize,DataTypes)=>(
     sequelize.define('domain',{
-        host:{ // 사용자가 우리 api를 쓸 수 있는 도메인을 제한.
+        host:{ // 사용자가 api를 쓸 수 있는 도메인을 제한.
             type:DataTypes.STRING(80),
             allowNull:false,
         },
@@ -23,4 +23,4 @@ module.exports = (sequelize, DataTypes) =>{
             }
         },
     })
-};
+);

@@ -8,7 +8,7 @@ module.exports = (passport)=>{
         callbackURL:'/auth/kakao/callback',
     },async(accessToken,refreshToken,profile,done)=>{
         try{
-        const exUser = await User.find({ //기존에 카카오로 가입한 유저찾기
+        const exUser = await User.findOne({ //기존에 카카오로 가입한 유저찾기
             where:{ 
                 snsId: profile.id,
                 provider: 'kakao',
