@@ -13,8 +13,7 @@ const favicon = require('serve-favicon');
 
 const IndexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
-const postRouter = require('./routes/post');
-const UserRouter = require('./routes/user');
+
 
 const {sequelize} = require('./models');
   
@@ -55,8 +54,7 @@ passportConfig(passport);
 
 app.use('/',IndexRouter);
 app.use('/auth',authRouter);
-app.use('/post',postRouter);
-app.use('/user',UserRouter);
+
 
 app.use((req,res,next)=>{
     const err = new Error('NOT FOUND');

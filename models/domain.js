@@ -17,8 +17,9 @@ module.exports = (sequelize, DataTypes) =>{
         paranoid:true, // 삭제일
         validate:{ // 데이터들이 올바르게 들어왔나 추가적으로 검사.
             unknownType(){
-                if(this.type !== 'free'&& this.type !== 'premium') // free랑 premium은 우리가 걍 만든거임
+                if(this.type !== 'free'&& this.type !== 'premium'){// free랑 premium은 우리가 걍 만든거임
                     throw new Error('type 컬럼은 free이거나 premium이여야 합니다.')
+                }
             }
         },
     })
