@@ -49,6 +49,7 @@ app.use(session({
         secure:false,
     },
 }));
+app.use('/v1',v1);
 app.use(flash());
 
 app.use(passport.initialize()); //passport 세션을 사용(express-session밑에 passport쪽 미들웨어 연결.)

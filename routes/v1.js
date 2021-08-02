@@ -1,0 +1,46 @@
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const domain = require('../models/domain');
+
+const {verifyToken} = require('./middlewares');
+const {Domain, User, Post, Hashtag} = require('../models')
+
+const router = express.Router();
+
+router.post('/token',async(req,res)=>{ // 토큰 발급해줄 라우터
+    const {clientSecret} = req.body; // 사용자가 비밀 키 넣어주면 발급
+    try{
+        const domain = await Domain.findOne({ // clientSecret이 맞는지 확인
+            where:{clientSecret},
+            include:{
+                model:User,
+                attribute:['nick','id']
+            }
+        });
+        if(!domain){
+            return res.status(401).json({
+                code:401,
+                message:'등록되지 않은 도메인입니다. 먼저 도메인을 등록하세요.'
+            });
+        }
+        const token = jwt.sign({ // jwt.sign으로 토큰 발급가능.(clientSecret이 맞는경우)
+            id:domain.user.id,
+            nick:domain.user.nick  // jwt.sign(아이디, jwt시크릿키, 유효기간)
+        },process.env.JWT_SECRET,{
+            expiresIn:'1m', // 토큰 유효시간
+            issuer:'nodebird'
+        });
+        return res.json({
+            code:200,
+            messgae:'토큰이 발급되었습니다.',
+            token,
+        })
+    }catch(error){ // catch할때 next error안하고 json하는 이유: 응답을 json으로 통일하기 위함.
+        return res.status(500).json({ 
+            code:500,
+            messgae:'서버 에러',
+        })
+    }
+});
+
+module.exports = router;
