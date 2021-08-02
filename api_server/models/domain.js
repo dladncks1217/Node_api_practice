@@ -8,7 +8,7 @@ module.exports = (sequelize,DataTypes)=>(
             type:DataTypes.STRING(10),
             allowNull:false,
         },
-        clientSecret:{ // 비밀 키
+        clientSecret:{ // 비밀 키 
             type:DataTypes.STRING(40),
             allowNull:false,
         },

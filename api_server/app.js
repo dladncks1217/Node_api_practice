@@ -14,6 +14,7 @@ const favicon = require('serve-favicon');
 
 const IndexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const v1 = require('./routes/v1');
 
 
 const {sequelize} = require('./models');

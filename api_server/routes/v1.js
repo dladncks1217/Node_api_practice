@@ -44,3 +44,5 @@ router.post('/token',async(req,res)=>{ // 토큰 발급해줄 라우터
 });
 
 module.exports = router;
+
+// jwt 토큰내용 다 보임. 민감한 내용 저장 안하는게 좋음, 대신 변조가 절때 불가능 -> 믿고 사용 가능
