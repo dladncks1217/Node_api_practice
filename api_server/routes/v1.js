@@ -1,9 +1,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const domain = require('../models/domain');
 
 const {verifyToken} = require('./middlewares');
-const {Domain, User, Post, Hashtag} = require('../models')
+const {Domain, User, Post, Hashtag} = require('../models');
+const { default: jwtDecode } = require('jwt-decode');
 
 const router = express.Router();
 
@@ -31,16 +31,21 @@ router.post('/token',async(req,res)=>{ // 토큰 발급해줄 라우터
             issuer:'nodebird'
         });
         return res.json({
-            code:200,
-            messgae:'토큰이 발급되었습니다.',
+            code: 200,
+            message: '토큰이 발급되었습니다.',
             token,
-        })
+        });
     }catch(error){ // catch할때 next error안하고 json하는 이유: 응답을 json으로 통일하기 위함.
         return res.status(500).json({ 
             code:500,
             messgae:'서버 에러',
         })
     }
+});
+
+router.get('/test', verifyToken, (req,res)=>{
+    console.log(req.authorization);
+    res.json(req.decoded);
 });
 
 module.exports = router;
