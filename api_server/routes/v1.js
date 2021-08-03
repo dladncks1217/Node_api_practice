@@ -48,6 +48,47 @@ router.get('/test', verifyToken, (req,res)=>{
     res.json(req.decoded);
 });
 
+router.get('/posts/my',verifyToken,(req,res)=>{
+    Post.findAll({where:{userId:req.decoded.id}})
+    .then((posts)=>{
+        console.log(posts);
+        res.json({
+            code:200,
+            payload: posts,
+        });
+    })
+    .catch((error)=>{
+        console.error(error);
+        return res.status(500).json({
+            code:500,
+            message:'서버 에러',
+        });
+    })
+});
+
+router.get('/posts/hashtag/:title',verifyToken, async(req,res)=>{
+    try{
+        const hashtag = await Hashtag.findOne({where:{id:req.params.title}});
+        if(!hashtag){
+            return res.status(404).json({
+                code:404,
+                message:'검색 결과가 없습니다.',
+            })
+        }
+        const posts = await hashtag.getPosts();
+        return res.json({
+            code:200,
+            payload: posts,
+        })
+    }catch(error){
+        console.error(error);
+        return res.status(500).json({
+            code:500,
+            message:'서버 에러',
+        })
+    }
+});
+
 module.exports = router;
 
 // jwt 토큰내용 다 보임. 민감한 내용 저장 안하는게 좋음, 대신 변조가 절때 불가능 -> 믿고 사용 가능
