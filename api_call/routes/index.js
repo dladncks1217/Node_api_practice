@@ -32,10 +32,10 @@ router.get('/test', async(req,res,next)=>{
 const requests = async(req,api)=>{
     try{
         if(!req.session.jwt){
-            const tokenResult = await axios.post('http://localhost:8002/token',{
+            const tokenResult = await axios.post('http://localhost:8002/v1/token',{
                 clientSecret:process.env.CLIENT_SECRET,
             });
-            req.session.jwt = tokenResult;
+            req.session.jwt = tokenResult.data.token;
         }
         return await axios.get(`http://localhost:8002/v1${api}`,{
             headers:{authorization:req.session.jwt},
@@ -47,12 +47,12 @@ const requests = async(req,api)=>{
         }
         throw error;
     }
-}
+};
 
 // /mypost ---> api_server의 /posts/my로 요청
 router.get('/mypost',async (req,res,next)=>{
     try{
-        const result = await requests('/posts/my');
+        const result = await requests(req,'/posts/my');
         res.json(result.data);
     }catch(error){
         console.error(error);
@@ -69,6 +69,16 @@ router.get('/search/:hashtag', async (req,res,next)=>{
         res.json(result.data);
     }catch(error){
         console.error(error);
+        next(error);
+    }
+})
+
+router.get('/follow', async(req,res,next)=>{
+    try{
+        const result = await requests(req,'/follow');
+        res.json(result.data);
+    }catch(error){
+        console.log(error);
         next(error);
     }
 })
