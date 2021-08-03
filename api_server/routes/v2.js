@@ -1,14 +1,11 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const {verifyToken, deprecated} = require('./middlewares');
+const {verifyToken, apiLimiter} = require('./middlewares');
 const {Domain, User, Post, Hashtag} = require('../models');
-const { default: jwtDecode } = require('jwt-decode');
-
 const router = express.Router();
 
-router.use(deprecated); // router 전체에 deprecated 적용 가능. (다 갖다 꽂아넣으면 ) router.use()로 사용.
-router.post('/token',async(req,res)=>{ // 토큰 발급해줄 라우터
+router.post('/token',apiLimiter, async(req,res)=>{ // 토큰 발급해줄 라우터
     const {clientSecret} = req.body; // 사용자가 비밀 키 넣어주면 발급
     try{
         const domain = await Domain.findOne({ // clientSecret이 맞는지 확인
@@ -44,12 +41,12 @@ router.post('/token',async(req,res)=>{ // 토큰 발급해줄 라우터
     }
 });
 
-router.get('/test', verifyToken, (req,res)=>{
+router.get('/test', apiLimiter, verifyToken, (req,res)=>{
     console.log(req.authorization);
     res.json(req.decoded);
 });
 
-router.get('/posts/my',verifyToken,(req,res)=>{
+router.get('/posts/my', apiLimiter, verifyToken,(req,res)=>{
     Post.findAll({where:{userId:req.decoded.id}})
     .then((posts)=>{
         console.log(posts);
@@ -67,7 +64,7 @@ router.get('/posts/my',verifyToken,(req,res)=>{
     })
 });
 
-router.get('/posts/hashtag/:title',verifyToken, async(req,res)=>{
+router.get('/posts/hashtag/:title', apiLimiter, verifyToken, async(req,res)=>{
     try{
         const hashtag = await Hashtag.findOne({where:{title:req.params.title}});
         if(!hashtag){
@@ -90,7 +87,7 @@ router.get('/posts/hashtag/:title',verifyToken, async(req,res)=>{
     }
 });
 
-router.get('/follow',verifyToken,async(req,res)=>{
+router.get('/follow', apiLimiter, verifyToken,async(req,res)=>{
     try{
         const user = await User.findOne({where:{id:req.decoded.id}});
         const follower = await user.getFollowers({ attributes:['id','nick']});
@@ -110,8 +107,3 @@ router.get('/follow',verifyToken,async(req,res)=>{
 })
 
 module.exports = router;
-
-
-
-
-// jwt 토큰내용 다 보임. 민감한 내용 저장 안하는게 좋음, 대신 변조가 절때 불가능 -> 믿고 사용 가능

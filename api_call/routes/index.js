@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/test', async(req,res,next)=>{
     try{
         if(!req.session.jwt){ // 한 번 토큰 받아오면 유효기간 끝나기 전까지는 세션에 저장해둘거임.
-            const tokenResult = await axios.post('http://localhost:8002/v1/token',{
+            const tokenResult = await axios.post('http://localhost:8002/v2/token',{
                 clientSecret:process.env.CLIENT_SECRET,
             });
             if(tokenResult.data && tokenResult.data.code===200){ // 토큰 발급 성공 시
@@ -16,7 +16,7 @@ router.get('/test', async(req,res,next)=>{
             }
         }
         console.log("이거임"+req.session.jwt);
-        const result = await axios.get('http://localhost:8002/v1/test',{
+        const result = await axios.get('http://localhost:8002/v2/test',{
             headers:{ authorization: req.session.jwt },
         });
         return res.json(result.data);
@@ -32,12 +32,12 @@ router.get('/test', async(req,res,next)=>{
 const requests = async(req,api)=>{
     try{
         if(!req.session.jwt){
-            const tokenResult = await axios.post('http://localhost:8002/v1/token',{
+            const tokenResult = await axios.post('http://localhost:8002/v2/token',{
                 clientSecret:process.env.CLIENT_SECRET,
             });
             req.session.jwt = tokenResult.data.token;
         }
-        return await axios.get(`http://localhost:8002/v1${api}`,{
+        return await axios.get(`http://localhost:8002/v2${api}`,{
             headers:{authorization:req.session.jwt},
         });
     }catch(error){

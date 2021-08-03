@@ -15,6 +15,7 @@ const favicon = require('serve-favicon');
 const IndexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const v1 = require('./routes/v1');
+const v2 = require('./routes/v2');
 
 
 const {sequelize} = require('./models');
@@ -51,6 +52,7 @@ app.use(session({
     },
 }));
 app.use('/v1',v1);
+app.use('/v2',v2);
 app.use(flash());
 
 app.use(passport.initialize()); //passport 세션을 사용(express-session밑에 passport쪽 미들웨어 연결.)
