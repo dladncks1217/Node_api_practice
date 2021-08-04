@@ -83,6 +83,10 @@ router.get('/follow', async(req,res,next)=>{
     }
 })
 
+router.get('/',(req,res,next)=>{
+    res.render('main',{key:process.env.CLIENT_SECRET});
+})
+
 module.exports = router;
 
 

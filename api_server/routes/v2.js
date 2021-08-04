@@ -1,10 +1,25 @@
+// API서버는 버전 관리가 중요. 
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const url = require('url');
 
 const {verifyToken, apiLimiter} = require('./middlewares');
 const {Domain, User, Post, Hashtag} = require('../models');
 const router = express.Router();
 
+//router.use(cors('localhost:8002')); // 얘가 응답헤더에 Access-Control-Allow-Origin 넣어줌.
+router.use(async(req,res,next)=>{
+    const domain = await Domain.findOne({ // 도메인이 있는지 검사.
+        where: {host:url.parse(req.get('origin')).host},
+    });
+    if(domain){
+        cors({origin:req.get('origin')})(req,res,next);
+    }else{
+        next();
+    }
+    
+}) // 위와 똑같고, 이를 이용해 커스터마이징 가능.
 router.post('/token',apiLimiter, async(req,res)=>{ // 토큰 발급해줄 라우터
     const {clientSecret} = req.body; // 사용자가 비밀 키 넣어주면 발급
     try{

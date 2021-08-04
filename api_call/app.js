@@ -10,11 +10,8 @@ const indexRouter = require('./routes');
 
 const app = express();
 app.set('port', process.env.PORT || 4000);
-app.set('view engine', 'html');
-nunjucks.configure('views', {
-  express: app,
-  watch: true,
-});
+app.set('view engine', 'ejs');
+
 
 app.use(morgan('dev'));
 app.use(cookieParser(process.env.COOKIE_SECRET));

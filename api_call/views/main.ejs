@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hi</title>
+</head>
+<body>
+    <div id="result"></div>
+    <script>
+        // cors 해결 : Access-Control-Allow-Origin을 헤더에 넣어주자.
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState===xhr.DONE){
+                if(xhr.status === 200){
+                    console.log(xhr.responseText);
+                    document.getElementById('result').textContent = xhr.responseText;
+                }else{
+                    console.error(xhr.responseText);
+                }
+            }
+        };
+        xhr.open('POST','http://localhost:8002/v2/token');
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.send(JSON.stringify({ clientSecret: '<%-key%>' }));
+        
+
+    </script>
+</body>
+</html>
